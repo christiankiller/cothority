@@ -74,7 +74,7 @@ func TestService(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	idAdminSig := generateSignature(nodeKP.Private, replyLink.ID, idAdmin)
 
@@ -112,7 +112,7 @@ func TestService(t *testing.T) {
 		User:      idAdmin,
 		Signature: idAdminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Try to cast a vote on a non-leader, should fail.
 	log.Lvl1("Casting vote on non-leader")
@@ -164,7 +164,7 @@ func TestService(t *testing.T) {
 		User:      idUser1,
 		Signature: idUser1Sig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 
 	// Prepare a helper for testing voting.
@@ -181,7 +181,7 @@ func TestService(t *testing.T) {
 			User:      user,
 			Signature: generateSignature(nodeKP.Private, replyLink.ID, user),
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 		return cast
 	}
 	// User votes
@@ -206,7 +206,7 @@ func TestService(t *testing.T) {
 		User:      idAdmin,
 		Signature: idAdminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Decrypt on non-leader
 	log.Lvl1("Decrypting")
@@ -223,7 +223,7 @@ func TestService(t *testing.T) {
 		User:      idAdmin,
 		Signature: idAdminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 
 	// Reconstruct on non-leader
@@ -236,7 +236,7 @@ func TestService(t *testing.T) {
 	reconstructReply, err := s0.Reconstruct(&evoting.Reconstruct{
 		ID: replyOpen.ID,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	for _, p := range reconstructReply.Points {
 		log.Lvl2("Point is:", p.String())
@@ -257,7 +257,7 @@ func runAnElection(t *testing.T, local *onet.LocalTest, s *Service, replyLink *e
 		User:      admin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 
 	// Prepare a helper for testing voting.
@@ -274,7 +274,7 @@ func runAnElection(t *testing.T, local *onet.LocalTest, s *Service, replyLink *e
 			User:      user,
 			Signature: generateSignature(nodeKP.Private, replyLink.ID, user),
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Nil(t, local.WaitDone(time.Second))
 		return cast
 	}
@@ -292,7 +292,7 @@ func runAnElection(t *testing.T, local *onet.LocalTest, s *Service, replyLink *e
 		User:      admin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 
 	// Decrypt all votes
@@ -302,7 +302,7 @@ func runAnElection(t *testing.T, local *onet.LocalTest, s *Service, replyLink *e
 		User:      admin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(defaultTimeout))
 
 	// Reconstruct votes
@@ -310,7 +310,7 @@ func runAnElection(t *testing.T, local *onet.LocalTest, s *Service, replyLink *e
 	_, err = s.Reconstruct(&evoting.Reconstruct{
 		ID: replyOpen.ID,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 }
 
@@ -336,7 +336,7 @@ func TestEvolveRoster(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote 1st roster")
 
 	runAnElection(t, local, s0, rl, nodeKP, idAdmin)
@@ -369,7 +369,7 @@ func TestEvolveRoster(t *testing.T) {
 		Key:       nodeKP.Public,
 		Admins:    []uint32{idAdmin, idAdmin2},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	require.Nil(t, local.WaitDone(time.Second))
 
 	// Run an election on the new set of conodes, the new nodeKP, and the new
@@ -395,7 +395,7 @@ func setupElection(t *testing.T, s0 *Service, rl *evoting.LinkReply, nodeKP *key
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Prepare a helper for testing voting.
 	vote := func(user uint32, bufCand []byte) *evoting.CastReply {
@@ -411,7 +411,7 @@ func setupElection(t *testing.T, s0 *Service, rl *evoting.LinkReply, nodeKP *key
 			User:      user,
 			Signature: generateSignature(nodeKP.Private, rl.ID, user),
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 		return cast
 	}
 
@@ -445,7 +445,7 @@ func TestShuffleBenignNodeFailure(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote the roster")
 
 	electionID := setupElection(t, s0, rl, nodeKP)
@@ -461,7 +461,7 @@ func TestShuffleBenignNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestShuffleCatastrophicNodeFailure(t *testing.T) {
@@ -491,7 +491,7 @@ func TestShuffleCatastrophicNodeFailure(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote the roster")
 
 	electionID := setupElection(t, s0, rl, nodeKP)
@@ -499,22 +499,22 @@ func TestShuffleCatastrophicNodeFailure(t *testing.T) {
 
 	// Append two Mixes manually to simulate a shuffle gone bad
 	election, err := lib.GetElection(s0.skipchain, electionID, false, 0)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	genMix := func(ballots []*lib.Ballot, election *lib.Election, serverIdentity *network.ServerIdentity, private kyber.Scalar) *lib.Mix {
 		a, b := lib.Split(ballots)
 		g, d, prov := shuffle.Shuffle(cothority.Suite, nil, election.Key, a, b, random.New())
 		proof, err := proof.HashProve(cothority.Suite, "", prov)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		mix := &lib.Mix{
 			Ballots: lib.Combine(g, d),
 			Proof:   proof,
 			NodeID:  serverIdentity.ID,
 		}
 		data, err := serverIdentity.Public.MarshalBinary()
-		require.Nil(t, err)
+		require.NoError(t, err)
 		sig, err := schnorr.Sign(cothority.Suite, private, data)
-		require.Nil(t, err)
+		require.NoError(t, err)
 		mix.Signature = sig
 		return mix
 	}
@@ -524,11 +524,11 @@ func TestShuffleCatastrophicNodeFailure(t *testing.T) {
 	mix := genMix(box.Ballots, election, roster.Get(0), local.GetPrivate(nodes[0]))
 	tx := lib.NewTransaction(mix, idAdmin)
 	_, err = lib.Store(s0.skipchain, election.ID, tx, nil)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	mix2 := genMix(mix.Ballots, election, roster.Get(1), local.GetPrivate(nodes[1]))
 	tx = lib.NewTransaction(mix2, idAdmin)
 	_, err = lib.Store(s0.skipchain, election.ID, tx, nil)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Fail 3 nodes. New blocks cannot be added now because consensus cannot be reached.
 	nodes[2].Pause()
@@ -557,7 +557,7 @@ func TestShuffleCatastrophicNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestDecryptBenignNodeFailure(t *testing.T) {
@@ -582,7 +582,7 @@ func TestDecryptBenignNodeFailure(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote the roster")
 
 	electionID := setupElection(t, s0, rl, nodeKP)
@@ -594,7 +594,7 @@ func TestDecryptBenignNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Close 2 Nodes
 	nodes[2].Close()
@@ -606,7 +606,7 @@ func TestDecryptBenignNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestDecryptCatastrophicNodeFailure(t *testing.T) {
@@ -636,7 +636,7 @@ func TestDecryptCatastrophicNodeFailure(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote the roster")
 
 	electionID := setupElection(t, s0, rl, nodeKP)
@@ -648,7 +648,7 @@ func TestDecryptCatastrophicNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Fail 3 nodes
 	nodes[2].Pause()
@@ -678,7 +678,7 @@ func TestDecryptCatastrophicNodeFailure(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestCastNodeFailureShuffleAllOk(t *testing.T) {
@@ -703,7 +703,7 @@ func TestCastNodeFailureShuffleAllOk(t *testing.T) {
 		Key:    nodeKP.Public,
 		Admins: []uint32{idAdmin},
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 	log.Lvl2("Wrote the roster")
 
 	adminSig := generateSignature(nodeKP.Private, rl.ID, idAdmin)
@@ -718,7 +718,7 @@ func TestCastNodeFailureShuffleAllOk(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	// Prepare a helper for testing voting.
 	vote := func(user uint32, bufCand []byte) *evoting.CastReply {
@@ -734,7 +734,7 @@ func TestCastNodeFailureShuffleAllOk(t *testing.T) {
 			User:      user,
 			Signature: generateSignature(nodeKP.Private, rl.ID, user),
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 		return cast
 	}
 
@@ -755,7 +755,7 @@ func TestCastNodeFailureShuffleAllOk(t *testing.T) {
 		User:      idAdmin,
 		Signature: adminSig,
 	})
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestLookupSciper(t *testing.T) {
